@@ -21,12 +21,12 @@ def check_api_key():
     return apiKey
 
 def check_preview(preview_mode, url, headers):
-    logging.info("🔍 Checking if domains exist")
+    logging.info("\u0001f50d  Checking if domains exist")
     try:
         r = requests.post(url, json=preview_mode, headers=headers)
         if r.json()['domainsCount'] != 0:
-            logging.info("✅ Domains exist")
-            logging.info("⛏️ Fetching domains\n")
+            logging.info("\u2705 Domains exist")
+            logging.info("\u26cf\ufe0f Fetching domains\n")
             return True
     except:
         logging.error("❌ Error occurred while fetching domains")
@@ -63,12 +63,8 @@ def reverse_whois(domain):
 
 def get_domain_from_ip(ip_address):
     try:
-        domain_name = socket.gethostbyaddr(ip_address)[0]
-        return domain_name
-    except socket.herror:
-        logging.error(f"Could not resolve domain name for IP: {ip_address}")
-        return None
-    except socket.gaierror as e:
+        return socket.gethostbyaddr(ip_address)[0]
+    except (socket.herror, socket.gaierror) as e:
         logging.error(f"Error resolving IP address: {e}")
         return None
 
@@ -143,21 +139,12 @@ def main():
     if check_preview(preview_mode, url, headers):
         execute(data, domains, url, headers, keyword, apiKey)
     
-    dns_record = input("Enter the DNS record (IP address or domain name): ")
-    if dns_record.replace('.', '', 1).isdigit():
-        domain = get_domain_from_ip(dns_record)
-        if domain:
-            whois_info = reverse_whois(domain)
-            if whois_info:
-                logging.info("\nWHOIS Information:")
-                for key, value in whois_info.items():
-                    logging.info(f"{key}: {value}")
-    else:
-        whois_info = reverse_whois(dns_record)
-        if whois_info:
-            logging.info("\nWHOIS Information:")
-            for key, value in whois_info.items():
-                logging.info(f"{key}: {value}")
+    # Perform WHOIS lookup on the keyword itself
+    whois_info = reverse_whois(keyword)
+    if whois_info:
+        logging.info("\nWHOIS Information for Keyword:")
+        for key, value in whois_info.items():
+            logging.info(f"{key}: {value}")
 
 if __name__ == "__main__":
     main()
