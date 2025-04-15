@@ -12,7 +12,6 @@ setup(
     description='A simple utility to perform reverse WHOIS lookups using whoisxml API',
     long_description=desc,
     long_description_content_type='text/markdown',
-    author='Devansh Batham <devanshbatham009@gmail.com>',
     license='MIT License',
     packages=find_packages(),
     classifiers=[
